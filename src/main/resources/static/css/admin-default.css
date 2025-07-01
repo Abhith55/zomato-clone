@@ -1,0 +1,146 @@
+/* 🔷 HEADER */
+.login-header {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 24px 0;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1000;
+}
+.login-header h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.login-header .sub {
+    font-size: 16px;
+    font-weight: 400;
+    color: #bdc3c7;
+    display: block;
+    margin-top: 5px;
+}
+
+/* 🔷 LOGIN BOX */
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 40px 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+}
+.login-box h2 {
+    margin-bottom: 25px;
+    font-size: 24px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* 🔷 FORM */
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-login:hover {
+    background-color: #2980b9;
+}
+
+/* 🔷 LAYOUT BODY */
+.login-body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.login-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(-45deg, #ffe6e6, #fff5e6, #e6fff2, #e6e6ff);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    position: relative;
+}
+
+/* 🔷 FOOD EMOJI BACKGROUND */
+.login-container::before {
+    content: "🍕 🍔 🍟 🍩 🍱 🍛 🍣";
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    animation: floatFood 5s infinite alternate ease-in-out;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* 🔷 ANIMATIONS */
+@keyframes floatFood {
+    0% { transform: translateX(-50%) translateY(0); }
+    100% { transform: translateX(-50%) translateY(20px); }
+}
+@keyframes gradientMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* 🔷 FOOTER */
+.login-footer {
+    text-align: center;
+    background-color: #2c3e50;
+    color: #fff;
+    font-size: 14px;
+    padding: 12px 0;
+    width: 100%;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔷 RESPONSIVE FIXES */
+@media screen and (max-width: 600px) {
+    .login-header h1 {
+        font-size: 22px;
+    }
+    .login-header .sub {
+        font-size: 14px;
+    }
+    .login-box {
+        padding: 20px;
+    }
+    .form-control {
+        font-size: 14px;
+    }
+}
