@@ -1,5 +1,8 @@
 package com.zomtao.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,13 @@ public class MenuServiceImpl implements MenusService {
 			return -1;
 		}
 		return 0;
+	}
+
+	@Override
+	public List<MenuDto> getMenusByUser(Long userId) {
+		// TODO Auto-generated method stub
+		List<Menus> list = repo.findByUserUid(userId);
+		return list.stream().map(mapper::entityToDto).collect(Collectors.toList());
 	}
 
 }

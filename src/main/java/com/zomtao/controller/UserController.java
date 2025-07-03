@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,7 @@ public class UserController {
 
 	@GetMapping
 	public ResponseEntity<?> getAllUser() {
+		System.out.print("controller called");
 		List<UserDto> userDto = userService.getAllUser();
 		if (userDto.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -84,6 +86,14 @@ public class UserController {
 		} else {
 			return ResponseEntity.internalServerError().body("Something Went Wrong");
 		}
+	}
+
+	// In your MenuController
+	@GetMapping("/{userId}")
+	public List<MenuDto> getMenusByUser(@PathVariable Long userId) {
+
+		System.out.print("Controller called" + userId);
+		return menusService.getMenusByUser(userId);
 	}
 
 }

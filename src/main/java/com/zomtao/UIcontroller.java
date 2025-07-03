@@ -26,4 +26,14 @@ public class UIcontroller {
 		return "user/showUser"; // maps to /WEB-INF/views/user/addUser.jsp
 	}
 
+	@GetMapping("/menus/add")
+	public String saveMenu() {
+		return "menus/addMenus"; // maps to /WEB-INF/views/user/addUser.jsp
+	}
+
+	@GetMapping("/menus/show")
+	public String showMenu() {
+		return "menus/showMenu"; // maps to /WEB-INF/views/user/addUser.jsp
+	}
+
 }

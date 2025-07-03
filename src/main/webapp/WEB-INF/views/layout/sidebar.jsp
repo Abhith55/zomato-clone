@@ -11,8 +11,8 @@
         <li class="sidebar-item">
             <a href="javascript:void(0);" class="has-submenu">📋 Menu Management</a>
          <ul class="submenu">
-                <li ><a href="${pageContext.request.contextPath}/user/add">➕ Add Menu </a></li>
-                <li><a href="${pageContext.request.contextPath}/user/list">📄 Show Menu</a></li>
+                <li ><a href="${pageContext.request.contextPath}/menus/add">➕ Add Menu </a></li>
+                <li><a href="${pageContext.request.contextPath}/menus/show">📄 Show Menu</a></li>
             </ul>
         </li>
 

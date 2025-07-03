@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/alert.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alert.css" />
 
     <!-- Scripts-->
     <script src="${pageContext.request.contextPath}/js/alert.js"></script>
@@ -150,6 +150,8 @@ body {
             <input type="text" name="state" id="state" required />
         </div>
 
+
+        
         <div class="material-input">
             <i class="material-icons">location_city</i>
             <label>City</label>
