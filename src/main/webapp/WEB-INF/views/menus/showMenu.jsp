@@ -223,9 +223,14 @@ function openSubmenuModal(menuId, menuTitle) {
 function closeSubmenuModal() {
   $("#submenuModal").hide();
 }
-
 function addMoreSubmenuField() {
-  $("#submenuInputs").append('<input type="text" class="submenu-input" placeholder="Enter Submenu Title" />');
+  $("#submenuInputs").append(`
+    <div class="submenu-row">
+      <input type="text" class="submenu-input" placeholder="Enter Submenu Title" />
+           <span class="material-icons remove-icon" onclick="removeSubmenuRow(this)">remove</span>
+
+    </div>
+  `);
 }
 
 function submitSubmenus() {
