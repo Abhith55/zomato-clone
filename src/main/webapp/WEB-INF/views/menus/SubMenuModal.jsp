@@ -80,10 +80,12 @@
     <h3>Add Submenus for <span id="modalMenuTitle"></span></h3>
 
     <input type="hidden" id="modalMenuId" />
-
+    <input type="hidden" id="modalUserId" />
+   
     <div id="submenuInputs">
       <div class="submenu-row">
         <input type="text" class="submenu-input" placeholder="Enter Submenu Title" />
+        <input type="text" class="submenu-input" placeholder="Enter Price" />
         <span class="material-icons remove-icon" onclick="removeSubmenuRow(this)">remove</span>
       </div>
     </div>
@@ -97,4 +99,6 @@
       <button onclick="submitSubmenus()" class="save-btn">✅ Save</button>
     </div>
   </div>
+
+
 </div>
