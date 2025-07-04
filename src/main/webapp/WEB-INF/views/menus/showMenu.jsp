@@ -6,8 +6,13 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboardheader.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alert.css" />
+
+    <!-- Scripts-->
+    <script src="${pageContext.request.contextPath}/js/alert.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="${pageContext.request.contextPath}/js/admin.js"></script>
+
 
 <style>
 .content-area {
@@ -119,7 +124,10 @@
         width: 100%;
         margin-bottom: 8px;
     }
+
 }
+
+
 </style>
 
 <div class="content-area">
@@ -135,6 +143,9 @@
       <!-- Menus will be loaded here -->
     </div>
   </div>
+  
+<div id="customAlert" class="custom-alert" style="display:none;"></div>
+
 </div>
 <%@ include file="../menus/SubMenuModal.jsp" %>
 
@@ -167,7 +178,7 @@ $(document).ready(function () {
         // 3. Load Menus by User
         $.get(`${pageContext.request.contextPath}/api/users/\${userId}`, function (menus) {
             let html = "";
-
+  console.log(menus);
             if (menus.length === 0) {
                 html = `<div style="text-align:center; padding:20px; color:red;">
                           ❌ No menus found for this restaurant.
@@ -180,7 +191,7 @@ $(document).ready(function () {
                             <div class="card-actions">
                                 <button class="edit-btn" onclick="editMenu(\${menu.id})">Edit</button>
                                 <button class="delete-btn" onclick="deleteMenu(\${menu.id})">Delete</ button>
-                                      <button class="edit-btn" onclick="openSubmenuModal(\${menu.id}, '\${menu.title}')">➕ Add Submenu</button>
+                                      <button class="edit-btn" onclick="openSubmenuModal(\${menu.id}, '\${menu.title}', \${menu.userId})">➕ Add Submenu</button>
                                 </div>
                             
 
@@ -213,56 +224,83 @@ function deleteMenu(menuId) {
 
 
 
-function openSubmenuModal(menuId, menuTitle) {
-  $("#modalMenuId").val(menuId);
+function openSubmenuModal(menuId, menuTitle,userId) {
+    debugger
+   $("#modalMenuId").val(menuId);
+  $("#modalUserId").val(userId); 
+ 
+  
+      console.log(userId);
+
   $("#modalMenuTitle").text(menuTitle);
-  $("#submenuInputs").html('<input type="text" class="submenu-input" placeholder="Enter Submenu Title" />');
+    $("#submenuInputs").html(`
+    <div class="submenu-row">
+      <input type="text" class="submenu-input" placeholder="Enter Submenu Title" />
+      <input type="text" class="submenu-input" placeholder="Enter Price" />
+    </div>
+  `);
   $("#submenuModal").show();
 }
 
 function closeSubmenuModal() {
   $("#submenuModal").hide();
-}
-function addMoreSubmenuField() {
+  
+}function addMoreSubmenuField() {
   $("#submenuInputs").append(`
     <div class="submenu-row">
       <input type="text" class="submenu-input" placeholder="Enter Submenu Title" />
-           <span class="material-icons remove-icon" onclick="removeSubmenuRow(this)">remove</span>
-
+      <input type="text" class="submenu-input" placeholder="Enter Price" />
+      <span class="material-icons remove-icon" onclick="removeSubmenuRow(this)">remove</span>
     </div>
   `);
 }
 
+function removeSubmenuRow(element) {
+  $(element).closest('.submenu-row').remove();
+}
 function submitSubmenus() {
-  const menuId = $("#modalMenuId").val();
-  const titles = [];
-
-  $(".submenu-input").each(function () {
-    const val = $(this).val().trim();
-    if (val !== "") titles.push(val);
-  });
-
-  if (titles.length === 0) {
-    alert("❌ Please enter at least one submenu.");
+    debugger
+  const menusId = $("#modalMenuId").val();
+  console.log(menusId);
+  const userId = $("#modalUserId").val();
+  console.log(userId);
+   if (!menusId || !userId) {
+    showAlert("❌ Something went wrong. Menu or User ID is missing.", "error");
     return;
   }
 
-  const payload = {
-    menuId: menuId,
-    submenus: titles
-  };
+  const submenus = [];
+
+  $("#submenuInputs .submenu-row").each(function () {
+    const title = $(this).find("input").eq(0).val().trim();
+    const price = $(this).find("input").eq(1).val().trim();
+
+    if (title !== "") {
+      submenus.push({
+        title: title,
+        price: price,
+        menusId: menusId,
+        userId: userId
+      });
+    }
+  });
+
+  if (submenus.length === 0) {
+    showAlert("❌ Please enter at least one submenu.", "error");
+    return;
+  }
 
   $.ajax({
-    url: `${pageContext.request.contextPath}/api/submenu/save-multiple`,
+    url: `${pageContext.request.contextPath}/api/subMenus/add`,
     type: "POST",
     contentType: "application/json",
-    data: JSON.stringify(payload),
+    data: JSON.stringify(submenus), // ✅ Send list directly
     success: function () {
-      alert("✅ Submenus added successfully!");
+      showAlert("✅ Submenus added successfully!","success");
       closeSubmenuModal();
     },
     error: function () {
-      alert("❌ Failed to add submenus.");
+      showAlert("❌ Failed to add submenus.","error");
     }
   });
 }
