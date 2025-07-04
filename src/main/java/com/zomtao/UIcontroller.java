@@ -36,4 +36,9 @@ public class UIcontroller {
 		return "menus/showMenu"; // maps to /WEB-INF/views/user/addUser.jsp
 	}
 
+	@GetMapping("/menus/SubMenu")
+	public String showSubMenu() {
+		return "menus/showSubMenu"; // maps to /WEB-INF/views/user/addUser.jsp
+	}
+
 }
