@@ -15,10 +15,12 @@
                 <li><a href="${pageContext.request.contextPath}/menus/show">📄 Show Menu</a></li>
             </ul>
         </li>
-
-
-
-        <li><a href="#">📁 Submenu Management</a></li>
+<li class="sidebar-item">
+            <a href="javascript:void(0);" class="has-submenu">📋 SubMenu Management </a>
+         <ul class="submenu">
+                <li><a href="${pageContext.request.contextPath}/menus/SubMenu">📄 Show Menu</a></li>
+            </ul>
+        </li>
     </ul>
 </div>
 
