@@ -8,6 +8,6 @@ public interface SubMenusService {
 
 	int createSubmenuDtos(List<SubmenuDto> submenuDto);
 
-	List<SubmenuDto> getSubmenusByMenuId(Long menuId);
+	List<SubmenuDto> getsubmenuByUserandMenuId(Long userId, Long menuId);
 
 }

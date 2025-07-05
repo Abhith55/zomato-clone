@@ -1,5 +1,6 @@
 package com.zomtao.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,9 +45,16 @@ public class SubMenusImpl implements SubMenusService {
 	}
 
 	@Override
-	public List<SubmenuDto> getSubmenusByMenuId(Long menuId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SubmenuDto> getsubmenuByUserandMenuId(Long userId, Long menuId) {
+		try {
+			List<Submenu> slist = subMenuRepo.findByUser_UidAndMenus_Id(userId, menuId);
+			return slist.stream().map(mapper::entitytoDto).collect(Collectors.toList());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return Collections.emptyList();
+		}
+
 	}
 
 }
