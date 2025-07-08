@@ -12,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zomtao.constant.AppPathConstant;
 import com.zomtao.dto.SubmenuDto;
 import com.zomtao.service.SubMenusService;
 
 @RestController
-@RequestMapping("/api/subMenus")
+@RequestMapping(AppPathConstant.API_SUBMENU_BASE)
 public class SubMenuController {
 
 	@Autowired
 	private SubMenusService subMenusService;
 
-	@PostMapping("/add")
+	@PostMapping(AppPathConstant.API_SUBMENU_ADD)
 	public ResponseEntity<String> addSubMenu(@RequestBody List<SubmenuDto> submenuDto) {
 		int i = subMenusService.createSubmenuDtos(submenuDto);
 		if (i == 1) {
@@ -32,7 +33,8 @@ public class SubMenuController {
 		}
 	}
 
-	@GetMapping("/shows/{userId}/{menuId}")
+	@GetMapping(AppPathConstant.API_SUBMENU_SHOW_FULL)
+	// @GetMapping("/shows/{userId}/{menuId}")
 	public ResponseEntity<List<SubmenuDto>> getMenusByUser(@PathVariable Long userId, @PathVariable Long menuId) {
 
 		System.out.println("Controller called with userId: " + userId + " and menuId: " + menuId);
