@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zomtao.constant.AppPathConstant;
 import com.zomtao.dto.MenuDto;
 import com.zomtao.dto.UserDto;
 import com.zomtao.emailService.emailService;
@@ -21,7 +22,7 @@ import com.zomtao.service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(AppPathConstant.API_USER_BASE)
 public class UserController {
 
 	@Autowired
@@ -33,7 +34,7 @@ public class UserController {
 	@Autowired
 	private emailService emailService;
 
-	@PostMapping("/register")
+	@PostMapping(AppPathConstant.API_USER_REGISTER)
 	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
 		if (result.hasErrors()) {
 			StringBuilder errorMessage = new StringBuilder();
@@ -74,7 +75,7 @@ public class UserController {
 	 * ResponseEntity.ok("Email Sent Successfully!"); }
 	 */
 
-	@PostMapping("/addMenu")
+	@PostMapping(AppPathConstant.API_USER_ADD_MENU)
 	public ResponseEntity<?> addMenus(@RequestBody MenuDto menuDto) {
 
 		int status = menusService.addMenus(menuDto);
@@ -89,7 +90,7 @@ public class UserController {
 	}
 
 	// In your MenuController
-	@GetMapping("/{userId}")
+	@GetMapping(AppPathConstant.API_USER_GET_MENU_BY_ID)
 	public List<MenuDto> getMenusByUser(@PathVariable Long userId) {
 
 		System.out.print("Controller called" + userId);
