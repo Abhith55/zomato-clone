@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +69,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public Page<UserDto> getAllUser(Pageable pageable, String query) {
+		if (query != null && !query.isEmpty()) {
+			Page<User> users = userrepo.searchUser(query, pageable);
+			return users.map(userMapper::entitytodto); // ✅ Using MapStruct directly
+		} else {
+			Page<User> users = userrepo.findAll(pageable);
+			return users.map(userMapper::entitytodto); // ✅ Using MapStruct directly
+		}
+	}
+
+	@Override
 	public LoginUser checkLogin(LoginRequest request) {
 		User user = userrepo.findByUsername(request.getUsername());
 		if (user == null) {
@@ -92,6 +105,6 @@ public class UserServiceImpl implements UserService {
 
 		// TODO Auto-generated method stub
 		return loginUser;
-	}
+	} // TODO Auto-generated method stub
 
 }

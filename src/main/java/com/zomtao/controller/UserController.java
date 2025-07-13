@@ -3,6 +3,9 @@ package com.zomtao.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zomtao.constant.AppPathConstant;
@@ -18,9 +22,7 @@ import com.zomtao.dto.UserDto;
 import com.zomtao.emailService.emailService;
 import com.zomtao.service.MenusService;
 import com.zomtao.service.UserService;
-
 import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping(AppPathConstant.API_USER_BASE)
 public class UserController {
@@ -63,9 +65,18 @@ public class UserController {
 		if (userDto.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
-
 		return ResponseEntity.ok(userDto);
+	}
 
+	@GetMapping(AppPathConstant.API_USER_GET_ALL)
+	public ResponseEntity<Page<UserDto>> getAllUser(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String query) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<UserDto> userPage = userService.getAllUser(pageable, query);
+		if (userPage.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(userPage);
 	}
 
 	/*

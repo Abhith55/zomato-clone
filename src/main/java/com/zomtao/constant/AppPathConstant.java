@@ -17,7 +17,8 @@ public class AppPathConstant {
 	// 🧑‍💼 USER MODULE
 	public static final String API_USER_BASE = "/api/users";
 	public static final String API_USER_REGISTER = "/register";
-	// public static final String API_USER_GET_ALL = API_USER_BASE;
+
+	public static final String API_USER_GET_ALL = "/getUser";
 	public static final String API_USER_ADD_MENU = "/addMenu";
 	public static final String API_USER_GET_MENU_BY_ID = "/{userId}";
 

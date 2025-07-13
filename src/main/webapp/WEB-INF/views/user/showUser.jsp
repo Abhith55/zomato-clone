@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+	<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../layout/header-dashboard.jsp" %>
 <%@ include file="../layout/sidebar.jsp" %>
@@ -10,39 +10,109 @@
   <script src="${pageContext.request.contextPath}/js/admin.js"></script>
 
   <script>
-$(document).ready(function () {
-    $.ajax({
-        url: "${pageContext.request.contextPath}/api/users",
-        type: "GET",
-        success: function (users) {
-          console.log("User Data ===>", users); 
-            let html = "";
-            users.forEach(function (user, index) {
-                html += `
-                    <tr>
-                        <td>\${index + 1}</td>
-                        <td>\${user.ownerName}</td>
-                        <td>\${user.restaurentName}</td>
-                        <td>\${user.state}</td>
-                        <td>\${user.city}</td>
-                        <td>\${user.username}</td>
-                        <td>\${user.role}</td>
-                        <td>
-                            <button class="action-btn" onclick="toggleUser(${user.uid}, this)">
-                                ${user.active ? 'Deactivate' : 'Activate'}
-                            </button>
-                            <button class="action-btn" onclick="editUser(${user.uid})">Edit</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            $("#userTableBody").html(html);
-        },
-        error: function () {
-            $("#userTableBody").html("<tr><td colspan='8'>❌ No user found</td></tr>");
-        }
-    });
+    let currentPage = 0;
+    let searchQuery = "";
+$(document).ready(() => {
+  fetchUsers(); // Default page 0
+$("#firstBtn").click(()=>{
+currentPage =0;
+fetchUsers(currentPage);
 });
+$("#prevBtn").click(()=>{
+if (currentPage>0) {
+currentPage--;
+fetchUsers(currentPage);
+}
+});
+$("#nextBtn").click(()=>{
+    console.log("next called");
+
+    console.log("next called" + searchQuery) ;
+    currentPage++;
+    fetchUsers(currentPage);
+});
+$("#lastBtn").click(() => {
+  $.ajax({
+    url: `${pageContext.request.contextPath}/api/users/getUser?page=0&size=10&query=\${searchQuery}`,
+    success: (res) => {
+      const totalPages = res.totalPages;
+      currentPage = totalPages - 1;
+      fetchUsers(currentPage); // Now this will have full content + totalPages
+    }
+  });
+});
+$("#pageInput").keydown((e) => {
+  if (e.key === "Enter" || e.keyCode === 13) {
+    const pageNum = parseInt($("#pageInput").val()) - 1;
+    if (pageNum >= 0) {
+      currentPage = pageNum;
+      fetchUsers(currentPage);
+      $("#pageInput").blur(); // Remove focus
+    }
+  }
+});
+$("#goBtn").click(() => {
+  const pageNum = parseInt($("#pageInput").val()) - 1;
+  if (pageNum >= 0) {
+    currentPage = pageNum;
+    fetchUsers(currentPage);
+  }
+});
+$("#userSearchInput").on("input", function() {
+  searchQuery = $(this).val().trim();
+  console.log(searchQuery);
+  currentPage = 0;
+  fetchUsers(currentPage);
+});
+
+});
+function fetchUsers(page = 0, size = 10) {
+    $.ajax({
+   url: `${contextPath}/api/users/getUser?page=\${page}&size=\${size}&query=\${searchQuery}`,
+    method: "GET",
+    success: function (response) {
+      const users = response.content;
+      const totalPages = response.totalPages;
+      renderTable(users);
+      renderPagination(page, totalPages);
+    },
+    error: function () {
+      $("#userTableBody").html("<tr><td colspan='8'>❌ No user found</td></tr>");
+    }
+  });
+}
+function renderTable(users) {
+  let html = "";
+  users.forEach((user, index) => {
+    html += `
+      <tr>
+        <td>\${index + 1}</td>
+        <td>\${user.ownerName}</td>
+        <td>\${user.restaurentName}</td>
+        <td>\${user.state}</td>
+        <td>\${user.city}</td>
+        <td>\${user.username}</td>
+        <td>\${user.role}</td>
+        <td>
+          <button class="action-btn" onclick="toggleUser(${user.uid}, this)">
+            ${user.active ? "Deactivate" : "Activate"}
+          </button>
+          <button class="action-btn" onclick="editUser(${user.uid})">Edit</button>
+        </td>
+      </tr>`;
+  });
+  $("#userTableBody").html(html);
+}
+
+function renderPagination(current, totalPages)
+{
+  $("#pageInput").val(current+1);
+  $("#totalPages").text(totalPages);
+
+$("#prevBtn").prop("disabled",current==0);
+  $("#nextBtn").prop("disabled",current==totalPages-1);
+
+}
 
 function toggleUser(uid, btn) {
     // Placeholder toggle logic
@@ -54,6 +124,7 @@ function toggleUser(uid, btn) {
 function editUser(uid) {
     window.location.href = "${pageContext.request.contextPath}/user/edit/" + uid;
 }
+
 </script>
 
 
@@ -94,20 +165,88 @@ tbody td {
     background-color: #3f51b5;
     border: none;
     color: white;
-    padding: 6px 12px;
-    margin-right: 5px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: background-color 0.25s ease, transform 0.15s ease;
 }
+
 .action-btn:hover {
     background-color: #2c3ea7;
+    transform: scale(1.05); /* Slight grow on hover */
+}
+
+
+.action-btn:active {
+    transform: scale(0.95); /* Shrink on click */
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+.search-icon {
+    color: #3f51b5;
+    margin-right: 8px;
+}
+
+.pagination-bar {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;   /* Right aligned */
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.page-btn.active {
+    background-color: #2c3ea7 !important;
+    font-weight: bold;
+    pointer-events: none;
+}
+#pageInput {
+    width: 45px;
+    text-align: center;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+
+@media (max-width: 600px) {
+  .pagination-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pagination-bar span {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 </style>
+
 
 <div class="content-area">
     <div class="table-container">
         <h2><i class="material-icons">groups</i> All Users</h2>
+<div class="search-bar">
+    <i class="material-icons search-icon">search</i>
+    <input type="text" id="userSearchInput" placeholder="Search by Owner, Username,PanorAddharCard  ..." />
+</div>
         <table>
             <thead>
                 <tr>
@@ -125,6 +264,23 @@ tbody td {
                 <!-- Rows loaded dynamically via AJAX -->
             </tbody>
         </table>
+<div class="pagination-bar">
+  <button class="action-btn" id="firstBtn">⏮ First</button>
+  <button class="action-btn" id="prevBtn">⬅ Prev</button>
+
+  <span style="display: flex; align-items: center; gap: 6px;">
+    Page
+    <input type="number" id="pageInput" value="1" min="1" style="width: 50px; text-align: center; padding: 4px 6px;" />
+    of <span id="totalPages">10</span>
+    <button class="action-btn" id="goBtn">Go</button>
+  </span>
+
+
+  <button class="action-btn" id="nextBtn">Next ➡</button>
+  <button class="action-btn" id="lastBtn">⏭ Last</button>
+</div>
+
+
     </div>
 </div>
 
