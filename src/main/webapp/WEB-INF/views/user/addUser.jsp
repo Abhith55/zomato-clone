@@ -14,7 +14,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="${pageContext.request.contextPath}/js/admin.js"></script>
 
- 
+
 <style>
 body {
     font-family: 'Roboto', sans-serif;
@@ -118,7 +118,7 @@ body {
 </style>
 <div class="content-area">
 <div class="user-form">
-       <div id="errorMsg" style="color: red; margin-top: 10px;"></div> 
+       <div id="errorMsg" style="color: red; margin-top: 10px;"></div>
 
   <h2><i class="material-icons">person_add</i> Add New User</h2>
 
@@ -132,7 +132,7 @@ body {
 <div class="material-input">
     <i class="material-icons">store</i>
     <label>Restaurant Name</label>
-    <input type="text" name="restaurentName" required 
+    <input type="text" name="restaurentName" required
            lang="auto"   placeholder="रेस्टोरेंट का नाम / Restaurant Name 🍽️"   id="restaurentName" inputmode="text" pattern=".*" />
 </div>
 
@@ -140,7 +140,7 @@ body {
             <i class="material-icons">calendar_today</i>
             <label>Registration Date</label>
             <input type="date" name="registrationDate"  id="registrationDate" value="<%= java.time.LocalDate.now()
-            
+
             %>" readonly />
         </div>
 
@@ -151,7 +151,7 @@ body {
         </div>
 
 
-        
+
         <div class="material-input">
             <i class="material-icons">location_city</i>
             <label>City</label>
@@ -204,7 +204,6 @@ body {
         const userData = {
             ownerName: document.getElementById("ownerName").value,
             restaurentName:document.getElementById("restaurentName").value,
-            registrationDate:document.getElementById("registrationDate").value,
             state:document.getElementById("state").value,
             city:document.getElementById("city").value,
             panorAddharCard:document.getElementById("panorAddharCard").value,
