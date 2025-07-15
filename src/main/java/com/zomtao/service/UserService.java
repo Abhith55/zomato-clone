@@ -17,4 +17,6 @@ public interface UserService {
 	public Page<UserDto> getAllUser(Pageable pageable, String query);
 
 	public LoginUser checkLogin(LoginRequest request);
+
+	public int changeStatus(UserDto userDto);
 }

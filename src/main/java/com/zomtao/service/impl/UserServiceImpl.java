@@ -1,7 +1,8 @@
 package com.zomtao.service.impl;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -40,11 +41,12 @@ public class UserServiceImpl implements UserService {
 	public int registerUser(UserDto dto) {
 		try {
 			if (dto.getRegistrationDate() == null) {
-				dto.setRegistrationDate(LocalDate.now());
+				dto.setRegistrationDate(LocalDateTime.now());
 				logger.info("registrationDate was null, set to current date: {}", dto.getRegistrationDate());
 			}
 			User user = userMapper.dtotoEntity(dto);
 			user.setPassword(passwordEncoder.encode(dto.getPassword()));
+			logger.info(" User status " + user.getStatus());
 			User savedUser = userrepo.save(user);
 			if (savedUser != null && savedUser.getUid() != null) {
 				// emailService.sendEmail(user.getEmail(), user.getUsername(),
@@ -53,13 +55,11 @@ public class UserServiceImpl implements UserService {
 			} else {
 				return 0;
 			}
-
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			return -1;
 		}
-
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 			Page<User> users = userrepo.searchUser(query, pageable);
 			return users.map(userMapper::entitytodto); // ✅ Using MapStruct directly
 		} else {
-			Page<User> users = userrepo.findAll(pageable);
+			Page<User> users = userrepo.findAllOrderedUser(pageable);
 			return users.map(userMapper::entitytodto); // ✅ Using MapStruct directly
 		}
 	}
@@ -87,14 +87,10 @@ public class UserServiceImpl implements UserService {
 		}
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new RuntimeException("Invalid Password Check Your Password again");
-
 		}
-
 		LoginUser loginUser = new LoginUser();
-
 		loginUser.setUserName(user.getUsername());
 		loginUser.setRole(user.getRole());
-
 		if (user.getRole().equals("ADMIN")) {
 			loginUser.setMessage("Welcome  Admin !");
 			loginUser.setSendRedirectURL("/admin/dashboard");
@@ -102,9 +98,28 @@ public class UserServiceImpl implements UserService {
 			loginUser.setMessage("Welcome  RESTAURANT_OWNER !");
 			loginUser.setSendRedirectURL("http://localhost:8081/home");
 		}
-
-		// TODO Auto-generated method stub
 		return loginUser;
 	} // TODO Auto-generated method stub
+
+	@Override
+	public int changeStatus(UserDto userDto) {
+		try {
+			Optional<User> userOptional = userrepo.findById(userDto.getUid());
+			if (userOptional.isPresent()) {
+				User user = userOptional.get();
+				user.setStatus(userDto.getStatus());
+				userrepo.save(user);
+				return 1;
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+
+			// TODO: handle exception
+		}
+
+	}
 
 }

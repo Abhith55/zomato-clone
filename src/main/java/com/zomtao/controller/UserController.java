@@ -2,10 +2,13 @@ package com.zomtao.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +25,9 @@ import com.zomtao.dto.UserDto;
 import com.zomtao.emailService.emailService;
 import com.zomtao.service.MenusService;
 import com.zomtao.service.UserService;
+
 import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(AppPathConstant.API_USER_BASE)
 public class UserController {
@@ -35,6 +40,8 @@ public class UserController {
 
 	@Autowired
 	private emailService emailService;
+
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@PostMapping(AppPathConstant.API_USER_REGISTER)
 	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
@@ -106,6 +113,28 @@ public class UserController {
 
 		System.out.print("Controller called" + userId);
 		return menusService.getMenusByUser(userId);
+	}
+
+	@PostMapping("/changeStatus")
+	public ResponseEntity<String> changeStatus(@RequestBody UserDto userDto) {
+		try {
+
+			logger.info("Change status method called" + userDto);
+			int i = userService.changeStatus(userDto);
+
+			if (i == 1) {
+				logger.info("if called  " + i);
+				return ResponseEntity.ok("Status updated");
+			} else if (i == 0) {
+				return ResponseEntity.badRequest().body("Status not updated");
+			} else {
+				return ResponseEntity.internalServerError().body("Something went wrong");
+			}
+		} catch (Exception e) {
+			logger.error("Exception occurred: " + e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Exception occurred while updating status");
+		}
 	}
 
 }

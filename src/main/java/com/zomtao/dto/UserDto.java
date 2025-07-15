@@ -1,6 +1,6 @@
 package com.zomtao.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.zomtao.enums.Role;
 
@@ -36,12 +36,14 @@ public class UserDto {
 	@Size(min = 6, message = "Password must be at least 6 characters")
 	private String password;
 
-	private LocalDate registrationDate;
+	private LocalDateTime registrationDate;
 
 	@Email(message = "Enter a valid email")
 	private String email;
 	@NotNull(message = "Role selection is mandotary")
 	private Role role;
+
+	private Integer status = 1;
 
 	public UserDto() {
 		super();
@@ -55,7 +57,7 @@ public class UserDto {
 			@NotBlank(message = "Username is required") @Size(min = 4, message = "Username must be at least 4 characters") String username,
 			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password must be at least 6 characters") String password,
 			@Email(message = "Enter a valid email") String email,
-			@NotNull(message = "Role selection is mandotary") Role role) {
+			@NotNull(message = "Role selection is mandotary") Role role, Integer status) {
 		super();
 		this.ownerName = ownerName;
 		this.restaurentName = restaurentName;
@@ -66,6 +68,7 @@ public class UserDto {
 		this.password = password;
 		this.email = email;
 		this.role = role;
+		this.status = status;
 	}
 
 	public Long getUid() {
@@ -148,12 +151,20 @@ public class UserDto {
 		this.role = role;
 	}
 
-	public LocalDate getRegistrationDate() {
+	public LocalDateTime getRegistrationDate() {
 		return registrationDate;
 	}
 
-	public void setRegistrationDate(LocalDate registrationDate) {
+	public void setRegistrationDate(LocalDateTime registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }
