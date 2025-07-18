@@ -11,6 +11,8 @@
 	<groupId>com.zomatoClone</groupId>
 	<artifactId>Zomato</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	    <!-- 👇 YAHI ADD KARNA HAI -->
+    <packaging>war</packaging>
 	<name>Zomato</name>
 	<description>this is a Restaurent Web App</description>
 	<url/>
